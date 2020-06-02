@@ -132,7 +132,7 @@ class ModalCard(MDCard):
     def on_release(self,**k):
         self.callback(self)
 
-class ProfileScreen(Screen):
+class ProfileScreen(CustomScreen):
 
     profile = DictProperty()
 
@@ -234,6 +234,7 @@ class ProfileScreen(Screen):
         self.ImageModal.keep_ratio = False
         self.ImageModal.allow_stretch = True
         self.ImageModal.size = self.ids.ProfileGrid.size
+        self.ImageModal.texture_size = self.ImageModal.size
         self.CardModal = MDCard(size_hint=(None,None), size=self.ids.ProfileGrid.size)
         self.CardModal.add_widget(self.ImageModal)
         self.ids.ProfileGrid.add_widget(self.CardModal)

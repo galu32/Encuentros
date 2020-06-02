@@ -80,3 +80,7 @@ class CustomScreen(Screen):
             self.add_widget(Working())
         else:
             self.remove_widget(self.children[0])
+
+    def ErrorRequest(self,x,y):
+        self.working = False
+        Snackbar(text="Algo salio mal, vuelve a internarlo.").show()

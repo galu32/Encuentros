@@ -52,6 +52,18 @@ def CreateNavKV():
             text : "Publicitar"
             RedIconLeft:
                 icon : "publish"
+        
+        NavDrawerItems:
+            id : TermsPage
+            text : "Terminos y condiciones"
+            RedIconLeft:
+                icon : "bookshelf"
+
+        NavDrawerItems:
+            id : ContactPage
+            text : "Contactanos"
+            RedIconLeft:
+                icon : "contact-mail"
 
     MDCard:
         id : LoginCard
@@ -206,7 +218,8 @@ class NavDrawer(MDNavigationDrawer):
             on_success=self.GetRegisterRequest,
             req_body=body,
             req_headers=headers,
-            ca_file=cert)
+            ca_file=cert,
+            on_failure=self.ErrorRequest,on_error=self.ErrorRequest)
 
     def GetRegisterRequest(self,req,res):
         self.working = False
@@ -240,7 +253,8 @@ class NavDrawer(MDNavigationDrawer):
             on_success=self.SetLoggedBox,
             req_body=body,
             req_headers=headers,
-            ca_file=cert)
+            ca_file=cert,
+            on_failure=self.ErrorRequest,on_error=self.ErrorRequest)
 
     def SetLoggedBox(self,req,res):
         self.working = False
@@ -272,11 +286,12 @@ class NavDrawer(MDNavigationDrawer):
         self.add_widget(self.login_card)
 
     def ScreenSwitcher(self,screen):
-        if not self.CurrentUser and screen not in  ["Personas","Publicitar"]:
+        if not self.CurrentUser and screen != "Personas":#not in  ["Personas","Publicitar"]:
             return Snackbar(text="Debes ingresar con tu usuario y contraseña primero").show()
-        if screen not in  ["Personas","Publicitar"]:
-            # if screen == "Publicitar":
-            #     self.parent.parent.current = "AnnounceScreen"
+        # if screen not in  ["Personas","Publicitar"]:
+        if screen != "Personas":
+            if screen == "Publicitar":
+                self.parent.parent.current = "AnnounceScreen"
             if screen == "Packs":
                 self.parent.working = True
                 import json
@@ -286,6 +301,11 @@ class NavDrawer(MDNavigationDrawer):
                 body = json.dumps({"Genero":"Mujer"})
                 self.SearchProfilesRquest = UrlRequest("https://fgpresentaciones.com/get_packs",
                                          on_success=lambda x,y : self.parent.parent.PacksScreen.UpdateProfiles(self.parent.parent,x,y,True),
-                                        req_body=body,req_headers=headers,ca_file=cert)
+                                        req_body=body,req_headers=headers,ca_file=cert,
+                                        on_failure=self.ErrorRequest,on_error=self.ErrorRequest)
 
             self.set_state("close")
+
+    def ErrorRequest(self,x,y):
+        self.working = False
+        Snackbar(text="Algo salio mal, vuelve a internarlo.").show()

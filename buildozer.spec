@@ -46,7 +46,7 @@ requirements = python3,kivy==2.0.0rc1,kivymd,openssl,certifi,hostpython3,android
 #garden_requirements =
 
 # (str) Presplash of the application
-#presplash.filename = %(source.dir)s/images/presp.png
+presplash.filename = %(source.dir)s/images/icon.png
 
 # (str) Icon of the application
 icon.filename = %(source.dir)s/images/icon.png
@@ -82,7 +82,7 @@ fullscreen = 0
 # red, blue, green, black, white, gray, cyan, magenta, yellow, lightgray,
 # darkgray, grey, lightgrey, darkgrey, aqua, fuchsia, lime, maroon, navy,
 # olive, purple, silver, teal.
-#android.presplash_color = "red"
+android.presplash_color = "#FFFFFF"
 
 # (list) Permissions
 android.permissions = INTERNET,ACCESS_NETWORK_STATE
