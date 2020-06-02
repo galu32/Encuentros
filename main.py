@@ -130,20 +130,13 @@ class MainApp(MDApp):
         self.MainKV = Builder.load_string(CreateMainKV())
         self.NavKV = Builder.load_string(CreateNavKV())
         self.ProfilesKV = Builder.load_string(CreateProfilesKV())
-        self.ProfileKV = Builder.load_string(CreateProfileKV())
-        self.AnnounceKV = Builder.load_string(CreateAnnounceKV())
-        self.AnnounceKV = Builder.load_string(CreatePacksKV())
-
-
-
 
         self.sm.MainScreen = MainScreen(sm=self.sm,
                                     callback=lambda status: self.ScreenAddAndRemove(self.sm.MainScreen,self.sm.SplashScreen,status))
         
-
-        # self.sm.add_widget(self.sm.SplashScreen)
+        self.sm.ProfilesScreen = ProfilesScreen()
         self.sm.add_widget(self.sm.MainScreen)        
-
+        self.sm.add_widget(self.sm.ProfilesScreen)
         self.theme_cls.primary_palette = "Red"
 
         return self.sm
@@ -156,17 +149,7 @@ class MainApp(MDApp):
             self.AddBox.open()
 
     def on_start(self,**kwargs):
-        self.sm.ProfilesScreen = ProfilesScreen()
-        self.sm.ProfileScreen = ProfileScreen()
-        self.sm.AnnounceScreen = AnnounceScreen()
-        self.sm.PacksScreen = PacksScreen()
-        self.sm.ProfilePacksScreen = ProfilePacksScreen()
-
-        self.sm.add_widget(self.sm.AnnounceScreen)
-        self.sm.add_widget(self.sm.ProfilesScreen)
-        self.sm.add_widget(self.sm.ProfileScreen)
-        self.sm.add_widget(self.sm.PacksScreen)
-        self.sm.add_widget(self.sm.ProfilePacksScreen)
+        pass
         
     def ScreenAddAndRemove(self,add,remove,status):
         if not status:            
@@ -184,7 +167,20 @@ class MainApp(MDApp):
             self.sm.current = "SplashScreen"
             return
 
+        self.ProfileKV = Builder.load_string(CreateProfileKV())
+        self.AnnounceKV = Builder.load_string(CreateAnnounceKV())
+        self.AnnounceKV = Builder.load_string(CreatePacksKV())
 
+
+        self.sm.ProfileScreen = ProfileScreen()
+        self.sm.AnnounceScreen = AnnounceScreen()
+        self.sm.PacksScreen = PacksScreen()
+        self.sm.ProfilePacksScreen = ProfilePacksScreen()
+
+        self.sm.add_widget(self.sm.AnnounceScreen)
+        self.sm.add_widget(self.sm.ProfileScreen)
+        self.sm.add_widget(self.sm.PacksScreen)
+        self.sm.add_widget(self.sm.ProfilePacksScreen)
         self.root.remove_widget(remove)
         self.root.current = add.name
 
