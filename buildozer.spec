@@ -28,7 +28,7 @@ source.include_exts = py,png,jpg,kv,atlas
 #source.exclude_patterns = license,images/*/*.jpg
 
 # (str) Application versioning (method 1)
-version = 1.0.0
+version = 1.0.1
 
 # (str) Application versioning (method 2)
 # version.regex = __version__ = ['"](.*)['"]
@@ -46,7 +46,7 @@ requirements = python3,kivy==2.0.0rc1,kivymd,openssl,certifi,hostpython3,android
 #garden_requirements =
 
 # (str) Presplash of the application
-#presplash.filename = %(source.dir)s/images/presp.png
+presplash.filename = %(source.dir)s/images/icon.png
 
 # (str) Icon of the application
 icon.filename = %(source.dir)s/images/icon.png
@@ -82,7 +82,7 @@ fullscreen = 0
 # red, blue, green, black, white, gray, cyan, magenta, yellow, lightgray,
 # darkgray, grey, lightgrey, darkgrey, aqua, fuchsia, lime, maroon, navy,
 # olive, purple, silver, teal.
-#android.presplash_color = "red"
+android.presplash_color = "#FFFFFF"
 
 # (list) Permissions
 android.permissions = INTERNET,ACCESS_NETWORK_STATE
@@ -221,7 +221,7 @@ android.logcat_filters = *:S python:D
 
 # (str) The Android arch to build for, choices: armeabi-v7a, arm64-v8a, x86, x86_64
 #android.arch = armeabi-v7a
-android.arch = arm64-v8a
+android.arch = armeabi-v7a
 
 #
 # Python for android (p4a) specific

@@ -7,6 +7,7 @@ from ScreenManagment import CreateManager
 from NavDrawer import CreateNavKV
 from AnnouncePage import CreateAnnounceKV, AnnounceScreen
 from PacksPage import CreatePacksKV,PacksScreen,ProfilePacksScreen
+
 root_kv = """
 
 <Snackbar>:
@@ -66,6 +67,7 @@ root_kv = """
     text_color: rgba("#f54242")
 
 <SplashScreen>:
+    name: "SplashScreen"
     MDBoxLayout:
         md_bg_color : rgba("#f54242")
 
@@ -115,53 +117,37 @@ class MainApp(MDApp):
         super().__init__(**kwargs)
         
     def build(self):
-
         self.sm = CreateManager()
         # self.sm.current_user = {}
-
+        self.sm.SplashScreen = SplashScreen()
         self.AddBox = CustomDialog()
 
         self.RootKV = Builder.load_string(root_kv)
         self.MainKV = Builder.load_string(CreateMainKV())
         self.NavKV = Builder.load_string(CreateNavKV())
         self.ProfilesKV = Builder.load_string(CreateProfilesKV())
-        self.ProfileKV = Builder.load_string(CreateProfileKV())
-        self.AnnounceKV = Builder.load_string(CreateAnnounceKV())
-        self.AnnounceKV = Builder.load_string(CreatePacksKV())
-
-        self.sm.SplashScreen = SplashScreen()
-
 
         self.sm.MainScreen = MainScreen(sm=self.sm,
                                     callback=lambda status: self.ScreenAddAndRemove(self.sm.MainScreen,self.sm.SplashScreen,status))
         
-
-        self.sm.add_widget(self.sm.SplashScreen)
+        self.sm.ProfilesScreen = ProfilesScreen()
         self.sm.add_widget(self.sm.MainScreen)        
-
+        self.sm.add_widget(self.sm.ProfilesScreen)
         self.theme_cls.primary_palette = "Red"
 
         return self.sm
 
     def on_resume(self,**kwargs):
         # super(MainApp,self).on_resume(**kwargs)
-        self.Paused = 0
-        if not self.AddBox.opened:
-            self.AddBox.text="esto te aparece si salis y volves"
-            self.AddBox.open()
+        pass
+        # self.Paused = 0
+        # if not self.AddBox.opened:
+        #     self.AddBox.text="esto te aparece si salis y volves"
+        #     self.AddBox.open()
 
     def on_start(self,**kwargs):
-        self.sm.ProfilesScreen = ProfilesScreen()
-        self.sm.ProfileScreen = ProfileScreen()
-        self.sm.AnnounceScreen = AnnounceScreen()
-        self.sm.PacksScreen = PacksScreen()
-        self.sm.ProfilePacksScreen = ProfilePacksScreen()
-
-        self.sm.add_widget(self.sm.AnnounceScreen)
-        self.sm.add_widget(self.sm.ProfilesScreen)
-        self.sm.add_widget(self.sm.ProfileScreen)
-        self.sm.add_widget(self.sm.PacksScreen)
-        self.sm.add_widget(self.sm.ProfilePacksScreen)
+        pass
+        
     def ScreenAddAndRemove(self,add,remove,status):
         if not status:            
             box = MDBoxLayout(orientation="vertical",padding=(0,0,0,0))
@@ -174,9 +160,24 @@ class MainApp(MDApp):
             box.add_widget(repalabel)
             box.add_widget(repalabel2)
             self.sm.SplashScreen.add_widget(box)
+            self.sm.add_widget(self.sm.SplashScreen)
+            self.sm.current = "SplashScreen"
             return
 
+        self.ProfileKV = Builder.load_string(CreateProfileKV())
+        self.AnnounceKV = Builder.load_string(CreateAnnounceKV())
+        self.AnnounceKV = Builder.load_string(CreatePacksKV())
 
+
+        self.sm.ProfileScreen = ProfileScreen()
+        self.sm.AnnounceScreen = AnnounceScreen()
+        self.sm.PacksScreen = PacksScreen()
+        self.sm.ProfilePacksScreen = ProfilePacksScreen()
+
+        self.sm.add_widget(self.sm.AnnounceScreen)
+        self.sm.add_widget(self.sm.ProfileScreen)
+        self.sm.add_widget(self.sm.PacksScreen)
+        self.sm.add_widget(self.sm.ProfilePacksScreen)
         self.root.remove_widget(remove)
         self.root.current = add.name
 

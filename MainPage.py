@@ -253,7 +253,7 @@ class MainScreen(CustomScreen):
 
         self.ImageGalleryRequest = UrlRequest("https://fgpresentaciones.com/get_image_gallery",
                                      on_success=lambda x,y : self.GetProfileGallery(x,y,d),
-                                    req_body=body,req_headers=headers,ca_file=cert)
+                                    req_body=body,req_headers=headers,ca_file=cert,on_failure=self.ErrorRequest,on_error=self.ErrorRequest)
         
 
         # self.sm.ProfileScreen.profile = d
@@ -332,7 +332,7 @@ class MainScreen(CustomScreen):
             self.working = True
             self.SearchProfilesRquest = UrlRequest("https://fgpresentaciones.com/get_profiles",
                                      on_success=lambda x,y : self.parent.ProfilesScreen.UpdateProfiles(self.parent,x,y),
-                                    req_body=body,req_headers=headers,ca_file=cert)
+                                    req_body=body,req_headers=headers,ca_file=cert,on_failure=self.ErrorRequest,on_error=self.ErrorRequest)
 
     def GetFiltersSearch(self,genderchange=False):
         filters = {}
@@ -353,4 +353,4 @@ class MainScreen(CustomScreen):
         self.callback(False)
 
     def NoDisponible(self):
-        Snackbar(text="La bsqueda por filtros no esta disponible aun!").show()
+        Snackbar(text="La busqueda por filtros no esta disponible aun!").show()

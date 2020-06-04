@@ -80,7 +80,7 @@ class PacksScreen(ProfilesScreen):
         self.working = True
         self.SearchProfilesRquest = UrlRequest("https://fgpresentaciones.com/get_packs",
                                  on_success=lambda x,y : self.UpdateProfiles(self.sm,x,y,True),
-                                req_body=body,req_headers=headers,ca_file=cert)
+                                req_body=body,req_headers=headers,ca_file=cert,on_failure=self.ErrorRequest,on_error=self.ErrorRequest)
 
     def OpenProfile(self,card):
         if not "publicidad" in card.id:
@@ -92,7 +92,7 @@ class PacksScreen(ProfilesScreen):
             self.working = True
             self.SearchProfilesRquest = UrlRequest("https://fgpresentaciones.com/get_profile_packs",
                                      on_success=lambda x,y : self.sm.ProfilePacksScreen.UpdateProfiles(self.sm,x,y,True),
-                                    req_body=body,req_headers=headers,ca_file=cert)
+                                    req_body=body,req_headers=headers,ca_file=cert,on_failure=self.ErrorRequest,on_error=self.ErrorRequest)
 
     def AvaiblePacks(self,instance):
         if not self.parent.MainScreen.ids.NavDrawer.CurrentUser:
@@ -107,7 +107,7 @@ class PacksScreen(ProfilesScreen):
         self.working = True
         self.AvaiblePacksReq = UrlRequest("https://fgpresentaciones.com/get_avaible_packs",
                                  on_success=lambda x,y : self.sm.ProfilePacksScreen.UpdateProfiles(self.sm,x,y,True),
-                                req_body=body,req_headers=headers,ca_file=cert)
+                                req_body=body,req_headers=headers,ca_file=cert,on_failure=self.ErrorRequest,on_error=self.ErrorRequest)
 
     def UpdateProfiles(self,sm,req,res, packs=False):
         if not res:
@@ -243,7 +243,7 @@ class ProfilePacksScreen(ProfilesScreen):
         self.working = True
         self.SearchProfilesRquest = UrlRequest("https://fgpresentaciones.com/send_email",
                                  on_success=lambda x,y: self.GetEmailFormResult(x,y),
-                                req_body=body,req_headers=headers,ca_file=cert)
+                                req_body=body,req_headers=headers,ca_file=cert,on_failure=self.ErrorRequest,on_error=self.ErrorRequest)
 
     def GetEmailFormResult(self,x,y):
         self.working=False
