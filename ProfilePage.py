@@ -247,6 +247,6 @@ class ProfileScreen(CustomScreen):
 
     def OpenNetwork(self,instance,label):
         if not self.Networks[label]:
-            webbrowser.open("https://google.com/")
+            return
         else:
             webbrowser.open(self.Networks[label])

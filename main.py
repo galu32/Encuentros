@@ -8,10 +8,6 @@ from NavDrawer import CreateNavKV
 from AnnouncePage import CreateAnnounceKV, AnnounceScreen
 from PacksPage import CreatePacksKV,PacksScreen,ProfilePacksScreen
 
-###
-Window.size = (1080,1968)
-###
-
 root_kv = """
 
 <Snackbar>:
@@ -143,10 +139,11 @@ class MainApp(MDApp):
 
     def on_resume(self,**kwargs):
         # super(MainApp,self).on_resume(**kwargs)
-        self.Paused = 0
-        if not self.AddBox.opened:
-            self.AddBox.text="esto te aparece si salis y volves"
-            self.AddBox.open()
+        pass
+        # self.Paused = 0
+        # if not self.AddBox.opened:
+        #     self.AddBox.text="esto te aparece si salis y volves"
+        #     self.AddBox.open()
 
     def on_start(self,**kwargs):
         pass

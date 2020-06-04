@@ -260,7 +260,7 @@ class NavDrawer(MDNavigationDrawer):
         self.working = False
         if not res["Status"]:
             return Snackbar(text="El usuario o la contraseña son incorrectos").show()     
-        self.CurrentUser = res["Status"][0]   
+        self.CurrentUser = res["Status"][0]  
         self.remove_widget(self.login_card)
         self.ProfileCard = MDCard(id="ProfileCard",size_hint=(None,.4),width=self.width)
         self.ProfileBox = MDGridLayout(id="ProfileBox",padding=(30,10,30,10))#, spacing=5)
@@ -271,6 +271,7 @@ class NavDrawer(MDNavigationDrawer):
         self.ProfileImage = AsyncImg(id="ProfileImage",source="images/profile.png", size_hint=(None,.5), width=self.ProfileCard.width / 2.5)
         self.ProfileBox.add_widget(self.ProfileImage)
         self.ProfileEdit = MDRaisedButton(id="ProfileEdit",text="Cambiar Contraseña")
+        self.ProfileEdit.on_release = self.ChangePassword
         self.Logout = MDRaisedButton(id="ProfileLogout",text="Cerrar Sesion")
         self.Logout.on_release = self.LogoutUser
         self.NameLabel = custom_description_label(text=self.CurrentUser["Name"])
@@ -286,9 +287,13 @@ class NavDrawer(MDNavigationDrawer):
         self.add_widget(self.login_card)
 
     def ScreenSwitcher(self,screen):
-        if not self.CurrentUser and screen != "Personas":#not in  ["Personas","Publicitar"]:
+        if not self.CurrentUser and screen not in  ["Personas","Contactanos","Terminos y condiciones"]:
             return Snackbar(text="Debes ingresar con tu usuario y contraseña primero").show()
         # if screen not in  ["Personas","Publicitar"]:
+        if screen == "Contactanos":
+            return Snackbar(text="Escribinos a contacto@encuentrosapp.com!", duration=3).show()
+        if screen == "Terminos y condiciones":
+            return
         if screen != "Personas":
             if screen == "Publicitar":
                 self.parent.parent.current = "AnnounceScreen"
@@ -306,6 +311,59 @@ class NavDrawer(MDNavigationDrawer):
 
             self.set_state("close")
 
+    
+    def ChangePassword(self):
+        self.remove_widget(self.ProfileCard)
+        self.ChangePasswordCard = MDCard(id="ProfileCard",size_hint=(None,.4),width=self.width)
+        self.ChangePasswordBox = MDBoxLayout(id = "ChangePasswordBox",orientation = "vertical",padding = (30,10,30,10),spacing = 3)
+        self.OldPassword = MDTextField(pos_hint = {"top" : 1},password=True)
+        self.OldPassword.hint_text="Antigua contraseña.."
+        self.NewPassword = MDTextField(pos_hint = {"top" : 1},password=True)
+        self.NewPassword.hint_text="Nueva contraseña.."
+        self.ChangePasswordButtonBox = MDBoxLayout(spacing=10)
+        self.GoBackFromNewPassword = MDRaisedButton(pos_hint = {"center_x": .5, "center_y": .5},text="Volver")
+        self.GoBackFromNewPassword.on_release = self.GoBackFromNewPass
+        self.SendPasswordChange = MDRaisedButton(pos_hint = {"center_x": .5, "center_y": .5},text="Enviar")
+        self.SendPasswordChange.on_release = self.SendPassChange
+        self.ChangePasswordButtonBox.add_widget(self.GoBackFromNewPassword)
+        self.ChangePasswordButtonBox.add_widget(self.SendPasswordChange)
+        self.ChangePasswordBox.add_widget(self.OldPassword)
+        self.ChangePasswordBox.add_widget(self.NewPassword)
+        self.ChangePasswordBox.add_widget(self.ChangePasswordButtonBox)
+        self.ChangePasswordCard.add_widget(self.ChangePasswordBox)
+        self.add_widget(self.ChangePasswordCard)
+
+    def GoBackFromNewPass(self):
+        self.remove_widget(self.ChangePasswordCard)
+        self.add_widget(self.ProfileCard)
+
+    def SendPassChange(self):
+        if not self.OldPassword.text or not self.NewPassword.text:
+            return Snackbar(text="Se deben completar todos los campos",duration=2).show()
+        if self.OldPassword.text == self.NewPassword.text:
+            return Snackbar(text="Las contraseñas deben ser diferentes",duration=2).show()
+        if len(self.NewPassword.text) < 6:
+            return Snackbar(text="La nueva contraseña debe ser de al menos 6 caracteres", duration=2).show()
+
+        self.working = True
+        import json
+        import certifi
+        cert = certifi.where()
+        headers = {'Content-type': 'application/json', 'Accept': 'text/json'}
+        body = json.dumps({"User": self.CurrentUser["Username"],"Old": self.OldPassword.text, "New": self.NewPassword.text})
+        self.ChangePasswordRequest = UrlRequest("https://fgpresentaciones.com/change_pass",
+                                 on_success=lambda x,y : self.GetPasswordChangeResponse(x,y),
+                                req_body=body,req_headers=headers,ca_file=cert,
+                                on_failure=self.ErrorRequest,on_error=self.ErrorRequest)        
+
+
+    def GetPasswordChangeResponse(self,req,res):
+        self.working = False
+        if not res["affectedRows"]:
+            return Snackbar(text="La contraseña antigua es incorrecta", duration=2).show()
+        return Snackbar(text="Se cambio correctamente la contraseña",duration=2).show()
+
     def ErrorRequest(self,x,y):
         self.working = False
+        self.parent.working = False
         Snackbar(text="Algo salio mal, vuelve a internarlo.").show()

@@ -13,6 +13,7 @@ def CreateAnnounceKV():
             id : AnnounceToolbar
             pos_hint : {"top" : 1}
             left_action_items : [['account-arrow-left-outline', lambda x : root.GoBack()]]
+            title : "¡Publicita en Encuentros!"
 
         MDGridLayout:
             id: formgrid
@@ -21,13 +22,13 @@ def CreateAnnounceKV():
             padding : 10,10,10,10
             spacing : 5
             
-            MDLabel:
-                text: "¡Publicita en Encuentros!"
-                theme_text_color: "Custom"
-                text_color: rgba("#f54242")
-                padding: 0,0
-                halign: "center"
-                font_style: "H2"
+            # MDLabel:
+            #     text: "¡Publicita en Encuentros!"
+            #     theme_text_color: "Custom"
+            #     text_color: rgba("#f54242")
+            #     padding: 0,0
+            #     halign: "center"
+            #     font_style: "H2"
 
             MDLabel:
                 text: "Recorda que debes ser mayor de 18 años y deberas validar tu identidad por cuestiones de seguridad."
@@ -93,4 +94,22 @@ class AnnounceScreen(CustomScreen):
                 form["Codigo"] = f.text
             else:
                 form[f.hint_text[:-2]] = f.text
-        print(self.parent.MainScreen.ids.NavDrawer.CurrentUser)
+        self.working = True
+        import json
+        import certifi
+        cert = certifi.where()
+        headers = {'Content-type': 'application/json', 'Accept': 'text/json'}
+        form["Email"] = self.parent.MainScreen.ids.NavDrawer.CurrentUser["Email"]
+        body = json.dumps(form)
+        self.SendFormRequest = UrlRequest("https://fgpresentaciones.com/new_suscription",
+                                 on_success=lambda x,y : self.GetSuscriptionResponse(x,y),
+                                req_body=body,req_headers=headers,ca_file=cert,
+                                on_failure=self.ErrorRequest,on_error=self.ErrorRequest)
+
+    def GetSuscriptionResponse(self,req,res):
+        self.working = False
+        if res["affectedRows"]:
+            return Snackbar(text="Recibiras un mail para completar tu registro",duration=2).show()
+        else:
+            return self.ErrorRequest()
+

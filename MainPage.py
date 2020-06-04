@@ -353,4 +353,4 @@ class MainScreen(CustomScreen):
         self.callback(False)
 
     def NoDisponible(self):
-        Snackbar(text="La bsqueda por filtros no esta disponible aun!").show()
+        Snackbar(text="La busqueda por filtros no esta disponible aun!").show()
