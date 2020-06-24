@@ -1,3 +1,6 @@
+
+#esto es una prueba de merge para git
+
 from Libs import *
 from kivy.clock import *
 from MainPage import  CreateMainKV, MainScreen
