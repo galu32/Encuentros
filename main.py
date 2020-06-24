@@ -1,5 +1,6 @@
 
 #esto es una prueba de merge para git
+#esto es un 1
 
 from Libs import *
 from kivy.clock import *
