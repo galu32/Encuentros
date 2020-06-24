@@ -1,6 +1,6 @@
 #esto es un 0?
 #esto es una prueba de merge para git
-
+#esto deberia ser una inconcistencia
 from Libs import *
 from kivy.clock import *
 from MainPage import  CreateMainKV, MainScreen
